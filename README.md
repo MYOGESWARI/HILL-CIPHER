@@ -29,74 +29,88 @@ STEP-4: Multiply the two matrices to obtain the cipher text of length three.
 STEP-5: Combine all these groups to get the complete cipher text.
 
 ## PROGRAM 
+```
+#include <stdio.h> 
+#include <string.h> 
+#include <ctype.h> 
+int keymat[3][3] = { 
+{ 17, 17, 5 }, 
+{ 21, 18, 21 }, 
+{ 2, 2, 19 } 
+}; 
+int invkeymat[3][3] = { 
+{ 4, 9, 15 }, 
+{ 15, 17, 6 }, 
+{ 24, 0, 17 } 
+}; 
+char key[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; 
+void encode(char *ret, char a, char b, char c) { 
+int x, y, z; 
+int posa = (int)a - 65; 
+int posb = (int)b - 65; 
+int posc = (int)c - 65; 
+x = posa * keymat[0][0] + posb * keymat[1][0] + posc * keymat[2][0]; 
+y = posa * keymat[0][1] + posb * keymat[1][1] + posc * keymat[2][1]; 
+z = posa * keymat[0][2] + posb * keymat[1][2] + posc * keymat[2][2]; 
+ret[0] = key[x % 26]; 
+ret[1] = key[y % 26]; 
+ret[2] = key[z % 26]; 
+ret[3] = '\0'; 
+} 
+void decode(char *ret, char a, char b, char c) { 
+int x, y, z; 
+int posa = (int)a - 65; 
+int posb = (int)b - 65; 
+int posc = (int)c - 65; 
+x = posa * invkeymat[0][0] + posb * invkeymat[1][0] + posc * invkeymat[2][0]; 
+y = posa * invkeymat[0][1] + posb * invkeymat[1][1] + posc * invkeymat[2][1]; 
+z = posa * invkeymat[0][2] + posb * invkeymat[1][2] + posc * invkeymat[2][2]; 
+ret[0] = key[(x % 26 < 0) ? (26 + x % 26) : (x % 26)]; 
+ret[1] = key[(y % 26 < 0) ? (26 + y % 26) : (y % 26)]; 
+ret[2] = key[(z % 26 < 0) ? (26 + z % 26) : (z % 26)]; 
+ret[3] = '\0'; 
+} 
+ 
+int main() { 
+    char msg[1000]; 
+    char enc[1000] = ""; 
+    char dec[1000] = ""; 
+    int n; 
+     
+    printf("Enter text:"); 
+    scanf("%s",msg); 
+    printf("Simulation of Hill Cipher\n"); 
+     
+     
+    for (int i = 0; i < strlen(msg); i++) { 
+        msg[i] = toupper(msg[i]); 
+    } 
+     
+    n = strlen(msg) % 3; 
+    if (n != 0) { 
+        for (int i = 1; i <= (3 - n); i++) { 
+            strcat(msg, "X"); 
+        } 
+    } 
+     
+    printf("Padded message : %s\n", msg); 
+     
+    for (int i = 0; i < strlen(msg); i += 3) { 
+char temp[4]; 
+encode(temp, msg[i], msg[i + 1], msg[i + 2]); 
+strcat(enc, temp); 
+} 
+printf("Encoded message : %s\n", enc); 
+for (int i = 0; i < strlen(enc); i += 3) { 
+char temp[4]; 
+decode(temp, enc[i], enc[i + 1], enc[i + 2]); 
+strcat(dec, temp); 
+} 
+printf("Decoded message : %s\n", dec); 
+return 0; 
+}
 
-
-
-     #include <stdio.h>
-     #include <string.h>
-     #include <ctype.h>
-     #define SIZE 3
-
-     void multiplyMatrix(int key[SIZE][SIZE], int text[SIZE], int result[SIZE]) {
-     for (int i = 0; i < SIZE; i++) {
-        result[i] = 0;
-        for (int j = 0; j < SIZE; j++) {
-            result[i] += key[i][j] * text[j];
-        }
-        result[i] = result[i] % 26;
-    }
-    }
-    int main() {
-    char plainText[100];
-    char cipherText[100] = "";
-    int key[SIZE][SIZE];
-    int len;
-    printf("Enter the plain text: ");
-    fgets(plainText, sizeof(plainText), stdin);
-    plainText[strcspn(plainText, "\n")] = '\0';
-    for (int i = 0; plainText[i]; i++) {
-        if (isalpha(plainText[i])) {
-            plainText[i] = toupper(plainText[i]);
-        }
-    }
-    char temp[100];
-    int idx = 0;
-    for (int i = 0; plainText[i]; i++) {
-        if (isalpha(plainText[i])) {
-            temp[idx++] = plainText[i];
-        }
-    }
-    temp[idx] = '\0';
-    strcpy(plainText, temp);
-    len = strlen(plainText);
-    while (len % 3 != 0) {
-        plainText[len++] = 'X';
-    }
-    plainText[len] = '\0';
-    printf("Enter the 3x3 key matrix:\n");
-    for (int i = 0; i < SIZE; i++) {
-        for (int j = 0; j < SIZE; j++) {
-            scanf("%d", &key[i][j]);
-        }
-    }
-    for (int i = 0; i < len; i += 3) {
-        int textVec[SIZE];
-        int result[SIZE];
-        for (int j = 0; j < SIZE; j++) {
-            textVec[j] = plainText[i + j] - 'A';
-        }
-        multiplyMatrix(key, textVec, result);
-        for (int j = 0; j < SIZE; j++) {
-            char c = result[j] + 'A';
-            strncat(cipherText, &c, 1);
-        }
-    }
-    printf("Cipher Text: %s\n", cipherText);
-    return 0;
-    }
-
-  
-
+```
 
 ## OUTPUT
 
