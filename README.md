@@ -101,7 +101,8 @@ STEP-5: Combine all these groups to get the complete cipher text.
 ## OUTPUT
 
 
-<img width="1536" height="732" alt="image" src="https://github.com/user-attachments/assets/824ed100-49c8-490f-9d26-a3c77ae96737" />
+<img width="1709" height="968" alt="image" src="https://github.com/user-attachments/assets/1da5a50a-8164-411d-8c7c-44f1cf391933" />
+
 
 ## RESULT
 
